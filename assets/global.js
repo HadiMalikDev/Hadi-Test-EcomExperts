@@ -1024,6 +1024,54 @@ class VariantRadios extends VariantSelects {
 
 customElements.define('variant-radios', VariantRadios);
 
+// Handles both select and radio buttons
+class VariantCustom extends VariantSelects {
+  constructor() {
+    super();
+  }
+
+  setInputAvailability(listOfOptions, listOfAvailableOptions) {
+    listOfOptions.forEach((input) => {
+      // Sets availability depending on input type. Handler functions copied from VariantSelect and VariantRadio classes
+      if (input.tagName === 'OPTION') {
+        if (listOfAvailableOptions.includes(input.getAttribute('value'))) {
+          input.innerText = input.getAttribute('value');
+        } else {
+          input.innerText = window.variantStrings.unavailable_with_option.replace('[value]', input.getAttribute('value'));
+        }
+        return
+      }
+      //Handler for select input types
+      if (listOfAvailableOptions.includes(input.getAttribute('value'))) {
+        input.classList.remove('disabled');
+      } else {
+        input.classList.add('disabled');
+      }
+    });
+  }
+
+  updateOptions() {
+    //Select all fieldset and select elements in the order that they occur
+    const elements = Array.from(this.querySelectorAll('fieldset,select'));
+    
+    this.options = [];
+    elements.forEach((el) => {
+      //Populates options array based on inputType. Handler code copied from VariantSelect and VariantRadio classes
+      if (el.tagName === 'FIELDSET') {
+        this.options.push(
+          Array.from(el.querySelectorAll('input')).find(
+            (radio) => radio.checked
+          ).value
+        );
+        return;
+      }
+      this.options.push(el.value);
+    });
+  }
+}
+
+customElements.define('variant-custom', VariantCustom);
+
 class ProductRecommendations extends HTMLElement {
   constructor() {
     super();
