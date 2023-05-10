@@ -1024,6 +1024,48 @@ class VariantRadios extends VariantSelects {
 
 customElements.define('variant-radios', VariantRadios);
 
+class VariantCustom extends VariantSelects {
+  constructor() {
+    super();
+  }
+
+  setInputAvailability(listOfOptions, listOfAvailableOptions) {
+    listOfOptions.forEach((input) => {
+      if (input.tagName === 'OPTION') {
+        if (listOfAvailableOptions.includes(input.getAttribute('value'))) {
+          input.innerText = input.getAttribute('value');
+        } else {
+          input.innerText = window.variantStrings.unavailable_with_option.replace('[value]', input.getAttribute('value'));
+        }
+        return
+      }
+      if (listOfAvailableOptions.includes(input.getAttribute('value'))) {
+        input.classList.remove('disabled');
+      } else {
+        input.classList.add('disabled');
+      }
+    });
+  }
+
+  updateOptions() {
+    const elements = Array.from(this.querySelectorAll('fieldset,select'));
+    this.options = [];
+    elements.forEach((el) => {
+      if (el.tagName === 'FIELDSET') {
+        this.options.push(
+          Array.from(el.querySelectorAll('input')).find(
+            (radio) => radio.checked
+          ).value
+        );
+        return;
+      }
+      this.options.push(el.value);
+    });
+  }
+}
+
+customElements.define('variant-custom', VariantCustom);
+
 class ProductRecommendations extends HTMLElement {
   constructor() {
     super();
