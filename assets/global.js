@@ -1024,6 +1024,7 @@ class VariantRadios extends VariantSelects {
 
 customElements.define('variant-radios', VariantRadios);
 
+// Handles both select and radio buttons
 class VariantCustom extends VariantSelects {
   constructor() {
     super();
@@ -1031,6 +1032,7 @@ class VariantCustom extends VariantSelects {
 
   setInputAvailability(listOfOptions, listOfAvailableOptions) {
     listOfOptions.forEach((input) => {
+      // Sets availability depending on input type. Handler functions copied from VariantSelect and VariantRadio classes
       if (input.tagName === 'OPTION') {
         if (listOfAvailableOptions.includes(input.getAttribute('value'))) {
           input.innerText = input.getAttribute('value');
@@ -1039,6 +1041,7 @@ class VariantCustom extends VariantSelects {
         }
         return
       }
+      //Handler for select input types
       if (listOfAvailableOptions.includes(input.getAttribute('value'))) {
         input.classList.remove('disabled');
       } else {
@@ -1048,9 +1051,12 @@ class VariantCustom extends VariantSelects {
   }
 
   updateOptions() {
+    //Select all fieldset and select elements in the order that they occur
     const elements = Array.from(this.querySelectorAll('fieldset,select'));
+    
     this.options = [];
     elements.forEach((el) => {
+      //Populates options array based on inputType. Handler code copied from VariantSelect and VariantRadio classes
       if (el.tagName === 'FIELDSET') {
         this.options.push(
           Array.from(el.querySelectorAll('input')).find(
